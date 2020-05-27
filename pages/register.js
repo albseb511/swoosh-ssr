@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Head from "next/head";
+import axios from 'axios';
 
 const initState = {
     phone: "",
@@ -7,11 +8,29 @@ const initState = {
     password: ""
 }
 
-export default function Login(){
-    const [payload,setPayload] = useState(initState)
+export default function Register(){
+    const [payload,setPayload] = useState(initState);
+    const [error, setError] = useState(null);
+    const [errMessage, setErrMessage] = useState("")
+
     const handleSubmit = (e) => {
         e.preventDefault()
-        console.log( payload )
+        setError(null)
+        axios.post('http://localhost:3000/api/v1/user/register',payload)
+        .then(res=>{
+          const { data } = res;
+          if(data.success){
+            setError(false)
+          }
+          else{
+            setErrMessage(res.data.message)
+            setError(true)
+          }
+        })
+        .catch(err=>{
+          setError(true)
+          setErrMessage(err.message)
+        })
     }
     const handleChange = e => {
         setPayload({...payload, [e.target.name]:e.target.value })
@@ -30,9 +49,16 @@ export default function Login(){
                 <div className="row">
                     <div className="col-md-9 col-lg-8 mx-auto">
                     <h3 className="login-heading mb-4">Register your account!</h3>
+                    { error===false && 
+                      <>
+                      <h6 className="mb-2 text-success"> Registration succesful </h6>
+                      <a className="btn btn-success mb-4" href="/login"> GOTO LOGIN PAGE </a>
+                      </>
+                    }
+                    { error===true && <h6 className="mb-4 text-danger"> {errMessage} </h6>}
                     <form onSubmit={handleSubmit}>
                         <div className="form-label-group">
-                        <label for="inputEmail">Email address</label>
+                        <label htmlFor="inputEmail">Email address</label>
                         <input 
                             type="email" 
                             id="inputEmail" 
@@ -42,10 +68,10 @@ export default function Login(){
                             className="form-control" 
                             placeholder="Email address" 
                             required 
-                            autofocus/>
+                            autoFocus/>
                         </div>
                         <div className="form-label-group">
-                        <label for="inputEmail">Phone no</label>
+                        <label htmlFor="inputEmail">Phone no</label>
                         <input 
                             type="tel" 
                             id="inputEmail" 
@@ -55,11 +81,11 @@ export default function Login(){
                             className="form-control" 
                             placeholder="Phone number" 
                             required 
-                            autofocus/>
+                            autoFocus/>
                         </div>
 
                         <div className="form-label-group">
-                        <label for="inputPassword">Password</label>
+                        <label htmlFor="inputPassword">Password</label>
                         <input 
                             type="password" 
                             value={payload.password} 

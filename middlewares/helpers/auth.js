@@ -4,26 +4,26 @@ export const authChecker = handler => (req, res) => {
 
     if ( req.method === 'POST' ){
 
-        let { email, username, password } = req.body;
+        let { email, phone, password } = req.body;
         if( !email ){
-            return res.status(406).json({
+            return res.status(200).json({
                 message: 'email is not valid',
-                is_error: true
+                success: false
             })
-        } else if( !username ){
-            return res.status(406).json({
-                message: 'username is not valid',
-                is_error: true
+        } else if( !phone ){
+            return res.status(200).json({
+                message: 'phone is not valid',
+                success: false
             })
         } else if( !password ){
-            return res.status(406).json({
+            return res.status(200).json({
                 message: 'password is not valid',
-                is_error: true
+                success: false
             })
         } else if( password.length<6 ){
-            return res.status(406).json({
+            return res.status(200).json({
                 message: 'password length should be minimum 6',
-                is_error: true
+                success: false
             })
         }
 

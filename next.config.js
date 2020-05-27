@@ -1,10 +1,10 @@
-const withPWA = require('next-pwa')
+// const withPWA = require('next-pwa')
 
-module.exports = withPWA({
+module.exports = {
     env: {
         MONGO_SERVER_URL: "mongodb://admin:Kunnan541544!@localhost:27017/swoosh?authSource=admin"
     },
     pwa: {
         dest: 'public'
       }
-})
+}

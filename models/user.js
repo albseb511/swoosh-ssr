@@ -1,15 +1,16 @@
-var mongoose = require('mongoose');
+import mongoose from 'mongoose';
 const { Schema } = mongoose;
+
+let count = 0
 
 delete mongoose.model['User']
 
-
-const UserScheme = new mongoose.Schema({
+const UserSchema = mongoose.model('User',new Schema({
     name:{
         type: String,
-        required: true,
         min:6,
-        max:255
+        max:255,
+        default: ""
     },
     email:{
         type:String,
@@ -17,7 +18,7 @@ const UserScheme = new mongoose.Schema({
         max: 255,
         min: 6
     },
-    hashPassword:{
+    password:{
         type:String,
         required: true,
         max: 1024,
@@ -70,7 +71,8 @@ const UserScheme = new mongoose.Schema({
         type:Array,
         default:[]
     }
-})
+}))
 
+console.log('count is',++count)
 
-module.exports = mongoose.model.User || mongoose.model('User', UserSchema);
+export default UserSchema

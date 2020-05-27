@@ -1,5 +1,6 @@
 import { useState } from "react"
 import Head from "next/head"
+import axios from 'axios';
 
 const initState = {
     email: "",
@@ -7,11 +8,33 @@ const initState = {
 }
 
 export default function Login(){
-    const [payload,setPayload] = useState(initState)
-    const handleSubmit = (e) => {
-        e.preventDefault()
-        console.log( payload )
-    }
+  const [payload,setPayload] = useState(initState);
+  const [error, setError] = useState(null);
+  const [errMessage, setErrMessage] = useState("")
+
+  const handleSubmit = (e) => {
+      e.preventDefault()
+      setError(null)
+      axios.post('http://localhost:3000/api/v1/user/login',payload)
+      .then(res=>{
+        const { data } = res;
+        if(data.success){
+          setError(false)
+          console.log('authorised', data)
+          localStorage.setItem('token',data.token)
+          location.assign('/')
+        }
+
+        else{
+          setErrMessage(res.data.message)
+          setError(true)
+        }
+      })
+      .catch(err=>{
+        setError(true)
+        setErrMessage(err.message)
+      })
+  }
     const handleChange = e => {
         setPayload({...payload, [e.target.name]:e.target.value })
     }
