@@ -28,15 +28,14 @@ async function register (req, res) {
         const payload = { email, phone, password: pass }
         User.create(payload,(err,data)=>{
             if(err){
-                res.status(500).message({
+                res.status(409).message({
                     success: false,
                     message: 'Failed to create user!'
                 })
             }
             res.status(201).json({
                 success: true,
-                email: data.email,
-                username: data.username
+                email: data.email
             })
         })
     }
